@@ -8,3 +8,10 @@ Docker & Docker Compose
 ## Supported repositories
  - MySQL https://github.com/b1412/kotlin-cannon-mysql
  - Kotlin-cannon https://github.com/b1412/kotlin-cannon
+
+## Get started
+
+### Quick start
+```bash
+make up
+``` 
