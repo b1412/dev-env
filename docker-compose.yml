@@ -2,27 +2,38 @@ version: '2.1'
 
 services:
   mysql:
-    container_name: docker-mysql
-    image: b1412/docker-mysql:3
+    container_name: mysql
+    image: docker.pkg.github.com/b1412/docker-mysql/docker-mysql:23
     ports:
       - "3306:3306"
     volumes:
       - local-mysql-data:/var/lib/mysql
     healthcheck:
-      test: "mysqladmin ping --silent"
+      #test: "mysqladmin ping --silent"
       interval: 5s
       timeout: 60s
       retries: 10
-  kotlin-cannon:
+  redis:
+    container_name: redis
+    image: redis:5.0.6
+    command: --save 100 60 --appendonly yes
+    volumes:
+      - local-redis-data:/persistent
+  kotlin-cannon-api:
     container_name: kotlin-cannon
-    image: b1412/kotlin-cannon:107
-    ports:
-      - "8080:8080"
+    image: docker.pkg.github.com/b1412/kotlin-cannon/kotlin-cannon-api:129
     links:
       - mysql
-    depends_on:
-      - mysql
+      - redis
+  nginx:
+    container_name: nginx
+    image: docker.pkg.github.com/b1412/dev-nginx/dev-nginx:5
+    ports:
+      - 127.0.0.1:80:80
+      - 127.0.0.1:443:443
 
 volumes:
   local-mysql-data:
+    driver: local
+  local-redis-data:
     driver: local
