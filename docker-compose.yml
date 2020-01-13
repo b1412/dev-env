@@ -28,10 +28,10 @@ services:
       - redis
   permission-ui:
     container_name: permission-ui
-    image: docker.pkg.github.com/b1412/permission-ui/permission-ui:14
+    image: docker.pkg.github.com/b1412/permission-ui/permission-ui:latest
   nginx:
     container_name: nginx
-    image: docker.pkg.github.com/b1412/dev-nginx/dev-nginx:12
+    image: docker.pkg.github.com/b1412/dev-nginx/dev-nginx:latest
     ports:
       - 127.0.0.1:80:80
       - 127.0.0.1:443:443
