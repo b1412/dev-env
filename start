@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+c_reset=`tput   $_c_term sgr0 2>/dev/null`
+c_green=`tput   $_c_term setaf 2 2>/dev/null || tput $_c_term setf 2 2>/dev/null`
+c_cyan=`tput    $_c_term setaf 6 2>/dev/null || tput $_c_term setf 3 2>/dev/null`
+
+function fail () {
+  wait
+  if [[ -z "$1" ]]; then
+    1="Script failed for unknown reason"
+  fi
+
+  sleep 0.1
+
+  echo "    ${c_red}FAILED:${c_reset} $1" >&2
+  echo "Exiting."
+  exit 63
+}
+
+function info() {
+  echo "    ${c_cyan}INFO:${c_reset} $1"
+}
+
+function ok () {
+  echo "    ${c_green}OK:${c_reset} $1"
+}
+
+
+
+info "Checking memory"
+DOCKER_MEM=`docker info -f '{{.MemTotal}}'`
+MEM_STATUS=`echo $DOCKER_MEM'>2000000000' | bc -l -q`
+if [[ $MEM_STATUS -ne 1 ]]; then
+  fail "You do not have enough memory allocated to Docker! You should allocate at least 2GB"
+else
+  ok "Memory looks good"
+fi
+
+info "Checking local alias"
+set +e
+ifconfig lo0 | grep -F "10.100.10.1"
+if [[ $? -ne 0 ]]; then
+  info "Setting local alias, you will be prompted for your sudo password"
+  sudo ifconfig lo0 alias 10.200.10.1/24
+  info "Alias added with IP 10.100.10.1"
+fi
+set -e
+
+
+echo "All done"
+
