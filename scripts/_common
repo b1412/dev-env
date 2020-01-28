@@ -1,0 +1,38 @@
+c_reset=`tput   $_c_term sgr0 2>/dev/null`
+c_green=`tput   $_c_term setaf 2 2>/dev/null || tput $_c_term setf 2 2>/dev/null`
+c_cyan=`tput    $_c_term setaf 6 2>/dev/null || tput $_c_term setf 3 2>/dev/null`
+
+function fail () {
+  wait
+  if [[ -z "$1" ]]; then
+    1="Script failed for unknown reason"
+  fi
+
+  sleep 0.1
+
+  echo "    ${c_red}FAILED:${c_reset} $1" >&2
+  echo "Exiting."
+  exit 63
+}
+
+function info() {
+  echo "    ${c_cyan}INFO:${c_reset} $1"
+}
+
+function ok () {
+  echo "    ${c_green}OK:${c_reset} $1"
+}
+
+function osfamily() {
+  case $OSTYPE in
+    darwin*)
+      echo 'darwin'
+      ;;
+    linux*)
+      echo 'linux'
+      ;;
+    *)
+      echo 'unknown'
+      ;;
+  esac
+}
