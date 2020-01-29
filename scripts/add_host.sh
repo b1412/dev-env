@@ -9,7 +9,7 @@ START_IP=${START_IP:-127.0.0.1}
 START_HOSTS=${START_HOSTS:-'
   kotlon-config
   kotlon-eureka
-  kotlon-cannon-api
+  permission-api
   mysql
   redis
 '}

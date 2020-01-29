@@ -19,7 +19,7 @@ set +e
 ifconfig lo0 | grep -F "10.100.10.1"
 if [[ $? -ne 0 ]]; then
   info "Setting local alias, you will be prompted for your sudo password"
-  sudo ifconfig lo0 alias 10.200.10.1/24
+  sudo ifconfig lo0 alias 10.100.10.1/24
   info "Alias added with IP 10.100.10.1"
 fi
 set -e
