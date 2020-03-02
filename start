@@ -4,7 +4,6 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 source "$DIR/scripts/_common"
 
-
 info "Checking memory"
 DOCKER_MEM=`docker info -f '{{.MemTotal}}'`
 MEM_STATUS=`echo $DOCKER_MEM'>2000000000' | bc -l -q`
@@ -14,17 +13,15 @@ else
   ok "Memory looks good"
 fi
 
-info "Checking local alias"
-set +e
-ifconfig lo0 | grep -F "10.100.10.1"
-if [[ $? -ne 0 ]]; then
-  info "Setting local alias, you will be prompted for your sudo password"
-  sudo ifconfig lo0 alias 10.100.10.1/24
-  info "Alias added with IP 10.100.10.1"
-fi
-set -e
+ip="127.0.0.1"
+declare -a hosts=("my-mood-tracker.com" "doc.my-mood-tracker.com")
+for host in ${hosts[@]}; do
+  if ! checkHost $host; then
+    addHost $host $ip
+  else
+    info "Hostname $host appears to be working"
+  fi
+done
 
-#./scripts/add_host.sh
-
-echo "All done"
+ok "All done: hosts in place"
 

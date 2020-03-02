@@ -3,7 +3,7 @@ version: '2.1'
 services:
   mysql:
     container_name: mysql
-    image: docker.pkg.github.com/b1412/docker-mysql/docker-mysql:23
+    image: docker.pkg.github.com/b1412/docker-mysql/docker-mysql:latest
     ports:
       - "3306:3306"
     volumes:

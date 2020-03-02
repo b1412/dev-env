@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 c_reset=`tput   $_c_term sgr0 2>/dev/null`
 c_green=`tput   $_c_term setaf 2 2>/dev/null || tput $_c_term setf 2 2>/dev/null`
 c_cyan=`tput    $_c_term setaf 6 2>/dev/null || tput $_c_term setf 3 2>/dev/null`
@@ -23,16 +25,20 @@ function ok () {
   echo "    ${c_green}OK:${c_reset} $1"
 }
 
-function osfamily() {
-  case $OSTYPE in
-    darwin*)
-      echo 'darwin'
-      ;;
-    linux*)
-      echo 'linux'
-      ;;
-    *)
-      echo 'unknown'
-      ;;
-  esac
+function checkHost() {
+  ! test -z "$(dscacheutil -q host -a name $1)"
+}
+
+function addHost() {
+  host="$1"
+  ip="$2"
+  hosts_file="/etc/hosts"
+  info "Adding entry for $host to $ip in $hosts_file."
+
+  printf "%s\t%s\n" "$ip" "$host" | sudo tee -a "$hosts_file" > /dev/null
+  if egrep -q "^${ip}\s+${host}$" "$hosts_file"; then
+    info "Host $host added successfully."
+  else
+    warn "Could not add host $host to $hosts_file. You need to manually edit $hosts_file."
+  fi
 }
