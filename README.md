@@ -14,4 +14,8 @@ Docker & Docker Compose
 ```bash
 make up
 ``` 
-go to http://dev.domain.com
+ go to http://dev.domain.com
+
+ username: admin
+ 
+ password: password
