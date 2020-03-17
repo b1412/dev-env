@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+source "$DIR/scripts/_common"
+
+info "Checking memory"
+DOCKER_MEM=`docker info -f '{{.MemTotal}}'`
+MEM_STATUS=`echo $DOCKER_MEM'>2000000000' | bc -l -q`
+if [[ $MEM_STATUS -ne 1 ]]; then
+  fail "You do not have enough memory allocated to Docker! You should allocate at least 2GB"
+else
+  ok "Memory looks good"
+fi
+
+ip="127.0.0.1"
+declare -a hosts=("my-mood-tracker.com" "doc.my-mood-tracker.com")
+for host in ${hosts[@]}; do
+  if ! checkHost $host; then
+    addHost $host $ip
+  else
+    info "Hostname $host appears to be working"
+  fi
+done
+
+ok "All done: hosts in place"
+
