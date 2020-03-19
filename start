@@ -14,7 +14,7 @@ else
 fi
 
 ip="127.0.0.1"
-declare -a hosts=("my-mood-tracker.com" "doc.my-mood-tracker.com")
+declare -a hosts=("dev.domain.com" "mysql" "config" "eureka" "gateway")
 for host in ${hosts[@]}; do
   if ! checkHost $host; then
     addHost $host $ip
@@ -24,4 +24,3 @@ for host in ${hosts[@]}; do
 done
 
 ok "All done: hosts in place"
-

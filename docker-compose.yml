@@ -20,24 +20,48 @@ services:
     command: --save 100 60 --appendonly yes
     volumes:
       - local-redis-data:/persistent
+
+  config:
+    container_name: config
+    image: docker.pkg.github.com/b1412/kotlin-config/kotlin-config:latest
+    ports:
+      - "7777:7777"
+    links:
+      - mysql
+      - redis
+  gateway:
+    container_name: gateway
+    image: docker.pkg.github.com/b1412/kotlin-gateway/kotlin-gateway:latest
+    links:
+      - config
+      - eureka
+  eureka:
+    container_name: eureka
+    image: docker.pkg.github.com/b1412/kotlin-eureka/kotlin-eureka:latest
+    ports:
+      - "8761:8761"
+    links:
+      - config
   permission-api:
     container_name: permission-api
     image: docker.pkg.github.com/b1412/permission-api/permission-api:latest
     links:
       - mysql
       - redis
+      - config
+      - gateway
+      - eureka
+
   permission-ui:
     container_name: permission-ui
-    image: docker.pkg.github.com/b1412/permission-ui/permission-ui:19
+    image: docker.pkg.github.com/b1412/permission-ui/permission-ui:latest
+
   nginx:
     container_name: nginx
     image: docker.pkg.github.com/b1412/dev-nginx/dev-nginx:latest
     ports:
       - 127.0.0.1:80:80
       - 127.0.0.1:443:443
-    links:
-      - permission-api
-      - permission-ui
 
 volumes:
   local-mysql-data:

@@ -12,13 +12,15 @@ up:
 	docker-compose up -d $(filter-out $@,$(MAKECMDGOALS))
 down:
 	docker-compose down $(filter-out $@,$(MAKECMDGOALS))
+pull:
+	docker-compose pull
 logs:
-	docker-compose logs -f --tail=200 mood-tracker-$(filter-out $@,$(MAKECMDGOALS))
+	docker-compose logs -f --tail=200 $(filter-out $@,$(MAKECMDGOALS))
 dance:
 	make down && make wipe && make up
 restart:
 	make down && make up
 login:
-	docker exec -it mood-tracker-$(filter-out $@,$(MAKECMDGOALS)) sh
+	docker exec -it $(filter-out $@,$(MAKECMDGOALS)) sh
 wipe:
 	docker volume ls | grep mysql | awk '{print $$2}' | xargs docker volume rm
