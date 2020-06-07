@@ -14,7 +14,7 @@ else
 fi
 
 ip="127.0.0.1"
-declare -a hosts=("dev.domain.com" "mysql" "config" "eureka" "gateway")
+declare -a hosts=("dev.domain.com" "mysql" "redis")
 for host in ${hosts[@]}; do
   if ! checkHost $host; then
     addHost $host $ip
