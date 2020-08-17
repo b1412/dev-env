@@ -36,6 +36,9 @@ services:
   nginx:
     container_name: nginx
     image: docker.pkg.github.com/b1412/dev-nginx/dev-nginx:latest
+    links:
+      - permission-api
+      - permission-ui
     ports:
       - 80:80
 volumes:
